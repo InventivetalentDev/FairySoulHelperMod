@@ -1,0 +1,16 @@
+[
+{
+  "modid": "fairysoulhelper",
+  "name": "Hypixel Skyblock Fairy Soul Helper",
+  "description": "Hypixel Skyblock Fairy Soul Helper",
+  "version": "${version}",
+  "mcversion": "${mcversion}",
+  "url": "https://hypixel.inventivetalent.org/",
+  "updateUrl": "",
+  "authorList": ["inventivetalent"],
+  "credits": "",
+  "logoFile": "assets/skyblockbosstimer/textures/fairy_soul.png",
+  "screenshots": [],
+  "dependencies": []
+}
+]
