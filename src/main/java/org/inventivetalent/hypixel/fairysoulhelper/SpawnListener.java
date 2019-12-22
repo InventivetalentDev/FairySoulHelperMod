@@ -17,12 +17,16 @@ import net.minecraft.util.text.ChatType;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
+import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
 
 import javax.annotation.Nullable;
 import java.lang.reflect.Field;
 import java.util.ArrayDeque;
+import java.util.LinkedHashSet;
+import java.util.Set;
+import java.util.UUID;
 
 public class SpawnListener {
 
@@ -31,8 +35,19 @@ public class SpawnListener {
 	private int tick    = 1;
 	private int seconds = 0;
 
+	private Set<UUID> allFairySouls = new LinkedHashSet<>();
+	private Set<UUID> foundFairySouls = new LinkedHashSet<>();
+
 	public SpawnListener(FairySoulMod mod) {
 		this.mod = mod;
+	}
+
+	@SubscribeEvent
+	public void on(EntityJoinWorldEvent event) {
+		if (event.getEntity() == Minecraft.getMinecraft().player) {
+			System.out.println("Joined World!");
+			allFairySouls.clear();
+		}
 	}
 
 	@SubscribeEvent
@@ -106,6 +121,11 @@ public class SpawnListener {
 										if ("57a4c8dc-9b8e-3d41-80da-a608901a6147".equals(skullOwner.getString("Id"))) {
 											//											System.out.println("Fairy Soul!");
 
+											if (allFairySouls.add(armorStand.getUniqueID())) {
+												System.out.println(allFairySouls);
+												System.out.println(allFairySouls.size()+" unique fairy souls");
+											}
+
 											armorStand.setAlwaysRenderNameTag(false);
 											armorStand.setInvisible(false);
 											armorStand.setGlowing(true);
@@ -142,6 +162,12 @@ public class SpawnListener {
 																			armorStand.setCustomNameTag("already found :(");
 
 																			Minecraft.getMinecraft().world.getScoreboard().addPlayerToTeam(armorStand.getCachedUniqueIdString(), "oldFairySouls");
+
+																			if (foundFairySouls.add(armorStand.getUniqueID())) {
+																				System.out.println(foundFairySouls);
+																				System.out.println(foundFairySouls.size()+" found fairy souls");
+																			}
+
 																		}
 																	} else {
 																	}
