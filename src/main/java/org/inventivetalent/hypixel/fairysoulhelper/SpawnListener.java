@@ -18,6 +18,7 @@ import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
+import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
 
@@ -58,24 +59,10 @@ public class SpawnListener {
 				tick = 1;
 				seconds++;
 
-				ArrayDeque<Particle>[][] fxLayers = null;
+				ArrayDeque<Particle>[][] fxLayers = ObfuscationReflectionHelper.getPrivateValue(ParticleManager.class, Minecraft.getMinecraft().effectRenderer, "fxLayers", "field_78876_b");;
 				Field posXField = null;
 				Field posYField = null;
 				Field posZField = null;
-				try {
-					Field fxLayersField = ParticleManager.class.getDeclaredField("fxLayers");
-					fxLayersField.setAccessible(true);
-					fxLayers = (ArrayDeque<Particle>[][]) fxLayersField.get(Minecraft.getMinecraft().effectRenderer);
-
-					posXField = Particle.class.getDeclaredField("posX");
-					posXField.setAccessible(true);
-					posYField = Particle.class.getDeclaredField("posY");
-					posYField.setAccessible(true);
-					posZField = Particle.class.getDeclaredField("posZ");
-					posZField.setAccessible(true);
-				} catch (NoSuchFieldException | IllegalAccessException e) {
-					e.printStackTrace();
-				}
 
 				World world = Minecraft.getMinecraft().world;
 				if (world != null) {
@@ -140,9 +127,9 @@ public class SpawnListener {
 														for (Particle particle : particles) {
 															try {
 																if (posXField != null && posYField != null && posZField != null) {
-																	double x = posXField.getDouble(particle);
-																	double y = posYField.getDouble(particle);
-																	double z = posZField.getDouble(particle);
+																	double x =(double)ObfuscationReflectionHelper.getPrivateValue(Particle.class,particle,"posX","field_187126_f");
+																	double y =(double)ObfuscationReflectionHelper.getPrivateValue(Particle.class,particle,"posY","field_187127_g");
+																	double z = (double)ObfuscationReflectionHelper.getPrivateValue(Particle.class,particle,"posZ","field_187128_h");
 
 																	double d = armorStand.getDistance(x, y, z);
 																	if (d < 2.5) {
