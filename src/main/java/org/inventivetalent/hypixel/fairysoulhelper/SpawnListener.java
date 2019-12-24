@@ -124,16 +124,7 @@ public class SpawnListener {
                                             .getTagCompound()
                                             .getCompoundTag("SkullOwner");
                                         if ("57a4c8dc-9b8e-3d41-80da-a608901a6147".equals(skullOwner.getString("Id"))) {
-                                            if (allFairySouls.add(armorStand.getUniqueID())) {
-                                                System.out.println(
-                                                    allFairySouls.size() +
-                                                    " unique fairy souls"
-                                                );
-                                            }
-
-                                            armorStand.setAlwaysRenderNameTag(
-                                                false
-                                            );
+                                            armorStand.setAlwaysRenderNameTag(true);
                                             armorStand.setGlowing(true);
                                             armorStand.setCustomNameTag(
                                                 "FAIRY SOUL!!!!"
@@ -145,15 +136,13 @@ public class SpawnListener {
                                                     i < fxLayers.length;
                                                     i++
                                                 ) {
-                                                    ArrayDeque<Particle>[] a =
-                                                        fxLayers[i];
+                                                    ArrayDeque<Particle>[] a = fxLayers[i];
                                                     for (
                                                         int k = 0;
                                                         k < a.length;
                                                         k++
                                                     ) {
-                                                        ArrayDeque<Particle> particles =
-                                                            a[k];
+                                                        ArrayDeque<Particle> particles = a[k];
 
                                                         for (Particle particle : particles) {
                                                             try {
@@ -220,11 +209,7 @@ public class SpawnListener {
                                                                                     "oldFairySouls"
                                                                                 );
 
-                                                                            if (
-                                                                                foundFairySouls.add(
-                                                                                    armorStand.getUniqueID()
-                                                                                )
-                                                                            ) {
+                                                                            if (foundFairySouls.add(armorStand.getUniqueID())) {
                                                                                 System.out.println(
                                                                                     foundFairySouls
                                                                                 );
@@ -236,9 +221,7 @@ public class SpawnListener {
                                                                         }
                                                                     }
                                                                 }
-                                                            } catch (
-                                                                Exception e
-                                                            ) {
+                                                            } catch (Exception e) {
                                                                 e.printStackTrace();
                                                             }
                                                         }
