@@ -126,10 +126,9 @@ public class SpawnListener {
 
 														for (Particle particle : particles) {
 															try {
-																if (posXField != null && posYField != null && posZField != null) {
-																	double x =(double)ObfuscationReflectionHelper.getPrivateValue(Particle.class,particle,"posX","field_187126_f");
-																	double y =(double)ObfuscationReflectionHelper.getPrivateValue(Particle.class,particle,"posY","field_187127_g");
-																	double z = (double)ObfuscationReflectionHelper.getPrivateValue(Particle.class,particle,"posZ","field_187128_h");
+																double x =(double)ObfuscationReflectionHelper.getPrivateValue(Particle.class,particle,"posX","field_187126_f");
+																double y =(double)ObfuscationReflectionHelper.getPrivateValue(Particle.class,particle,"posY","field_187127_g");
+																double z = (double)ObfuscationReflectionHelper.getPrivateValue(Particle.class,particle,"posZ","field_187128_h");
 
 																	double d = armorStand.getDistance(x, y, z);
 																	if (d < 2.5) {
@@ -155,9 +154,8 @@ public class SpawnListener {
 																				System.out.println(foundFairySouls.size()+" found fairy souls");
 																			}
 
-																		}
-																	} else {
 																	}
+																} else {
 																}
 															} catch (Exception e) {
 																e.printStackTrace();
