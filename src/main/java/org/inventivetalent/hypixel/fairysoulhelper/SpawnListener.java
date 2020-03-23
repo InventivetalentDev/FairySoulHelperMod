@@ -246,10 +246,8 @@ public class SpawnListener {
                                                                             );
                                                                         }
                                                                     }
-                                                                } else {}
-                                                            } catch (
-                                                                Exception e
-                                                            ) {
+                                                                }
+                                                            } catch (Exception e) {
                                                                 e.printStackTrace();
                                                             }
                                                         }

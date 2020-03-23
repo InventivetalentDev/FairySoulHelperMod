@@ -1,7 +1,5 @@
 .idea/*
-build
-.gradle
-bin
-.classpath
-.project
-.settings
+build/*
+out/*
+run/*
+.gradle/*
