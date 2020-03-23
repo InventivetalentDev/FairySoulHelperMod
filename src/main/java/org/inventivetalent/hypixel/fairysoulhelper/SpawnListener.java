@@ -29,12 +29,17 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
 
 public class SpawnListener {
+    private FairySoulMod mod;
+
     private int tick = 1;
+    private int seconds = 0;
 
     private Set<UUID> allFairySouls = new LinkedHashSet<>();
     private Set<UUID> foundFairySouls = new LinkedHashSet<>();
 
-    public SpawnListener() {}
+    public SpawnListener(FairySoulMod mod) {
+        this.mod = mod;
+    }
 
     @SubscribeEvent
     public void on(EntityJoinWorldEvent event) {
@@ -49,6 +54,7 @@ public class SpawnListener {
         if (event.phase == TickEvent.Phase.START) {
             if (tick >= 20) {
                 tick = 1;
+                seconds++;
 
                 ArrayDeque<Particle>[][] fxLayers = ObfuscationReflectionHelper.getPrivateValue(
                     ParticleManager.class,
@@ -65,7 +71,6 @@ public class SpawnListener {
                     ScorePlayerTeam newTeam = world
                         .getScoreboard()
                         .getTeam("newFairySouls");
-
                     if (newTeam == null) {
                         newTeam =
                             Minecraft
@@ -80,7 +85,6 @@ public class SpawnListener {
                         .getMinecraft()
                         .world.getScoreboard()
                         .getTeam("oldFairySouls");
-
                     if (oldTeam == null) {
                         oldTeam =
                             Minecraft
@@ -123,12 +127,30 @@ public class SpawnListener {
                                         NBTTagCompound skullOwner = headItem
                                             .getTagCompound()
                                             .getCompoundTag("SkullOwner");
-                                        if ("57a4c8dc-9b8e-3d41-80da-a608901a6147".equals(skullOwner.getString("Id"))) {
-                                            armorStand.setAlwaysRenderNameTag(true);
-                                            armorStand.setGlowing(true);
-                                            armorStand.setCustomNameTag(
-                                                "FAIRY SOUL!!!!"
+                                        if (
+                                            "57a4c8dc-9b8e-3d41-80da-a608901a6147".equals(
+                                                    skullOwner.getString("Id")
+                                                )
+                                        ) {
+                                            if (
+                                                allFairySouls.add(
+                                                    armorStand.getUniqueID()
+                                                )
+                                            ) {
+                                                System.out.println(
+                                                    allFairySouls
+                                                );
+                                                System.out.println(
+                                                    allFairySouls.size() +
+                                                    " unique fairy souls"
+                                                );
+                                            }
+
+                                            armorStand.setAlwaysRenderNameTag(
+                                                false
                                             );
+                                            armorStand.setInvisible(false);
+                                            armorStand.setGlowing(true);
 
                                             if (fxLayers != null) {
                                                 for (
@@ -136,92 +158,98 @@ public class SpawnListener {
                                                     i < fxLayers.length;
                                                     i++
                                                 ) {
-                                                    ArrayDeque<Particle>[] a = fxLayers[i];
+                                                    ArrayDeque<Particle>[] a =
+                                                        fxLayers[i];
                                                     for (
                                                         int k = 0;
                                                         k < a.length;
                                                         k++
                                                     ) {
-                                                        ArrayDeque<Particle> particles = a[k];
+                                                        ArrayDeque<Particle> particles =
+                                                            a[k];
 
                                                         for (Particle particle : particles) {
                                                             try {
-                                                                if (
-                                                                    posXField !=
-                                                                    null &&
-                                                                    posYField !=
-                                                                    null &&
-                                                                    posZField !=
-                                                                    null
-                                                                ) {
-                                                                    double x = (double) ObfuscationReflectionHelper.getPrivateValue(
-                                                                        Particle.class,
-                                                                        particle,
-                                                                        "posX",
-                                                                        "field_187126_f"
-                                                                    );
-                                                                    double y = (double) ObfuscationReflectionHelper.getPrivateValue(
-                                                                        Particle.class,
-                                                                        particle,
-                                                                        "posY",
-                                                                        "field_187127_g"
-                                                                    );
-                                                                    double z = (double) ObfuscationReflectionHelper.getPrivateValue(
-                                                                        Particle.class,
-                                                                        particle,
-                                                                        "posZ",
-                                                                        "field_187128_h"
+                                                                double x = (double) ObfuscationReflectionHelper.getPrivateValue(
+                                                                    Particle.class,
+                                                                    particle,
+                                                                    "posX",
+                                                                    "field_187126_f"
+                                                                );
+                                                                double y = (double) ObfuscationReflectionHelper.getPrivateValue(
+                                                                    Particle.class,
+                                                                    particle,
+                                                                    "posY",
+                                                                    "field_187127_g"
+                                                                );
+                                                                double z = (double) ObfuscationReflectionHelper.getPrivateValue(
+                                                                    Particle.class,
+                                                                    particle,
+                                                                    "posZ",
+                                                                    "field_187128_h"
+                                                                );
+
+                                                                double d = armorStand.getDistance(
+                                                                    x,
+                                                                    y,
+                                                                    z
+                                                                );
+                                                                if (d < 2.5) {
+                                                                    armorStand.setAlwaysRenderNameTag(
+                                                                        true
                                                                     );
 
-                                                                    double d = armorStand.getDistance(
-                                                                        x,
-                                                                        y,
-                                                                        z
-                                                                    );
-                                                                    if (d < 2.5) {
-                                                                        armorStand.setAlwaysRenderNameTag(true);
+                                                                    if (
+                                                                        particle instanceof ParticlePortal
+                                                                    ) {
+                                                                        armorStand.setFire(
+                                                                            2
+                                                                        );
+                                                                        armorStand.setCustomNameTag(
+                                                                            "FAIRY SOUL!!!!"
+                                                                        );
 
-                                                                        if (particle instanceof ParticlePortal) {
-                                                                            armorStand.setFire(2);
-                                                                            armorStand.setCustomNameTag(
-                                                                                "FAIRY SOUL!!!!"
+                                                                        Minecraft
+                                                                            .getMinecraft()
+                                                                            .world.getScoreboard()
+                                                                            .addPlayerToTeam(
+                                                                                armorStand.getCachedUniqueIdString(),
+                                                                                "newFairySouls"
                                                                             );
 
-                                                                            Minecraft
-                                                                                .getMinecraft()
-                                                                                .world.getScoreboard()
-                                                                                .addPlayerToTeam(
-                                                                                    armorStand.getCachedUniqueIdString(),
-                                                                                    "newFairySouls"
-                                                                                );
+                                                                        b[0] =
+                                                                            true;
+                                                                    } else {
+                                                                        armorStand.setCustomNameTag(
+                                                                            "already found :("
+                                                                        );
 
-                                                                            b[0] = true;
-                                                                        } else {
-                                                                            armorStand.setCustomNameTag(
-                                                                                "already found :("
+                                                                        Minecraft
+                                                                            .getMinecraft()
+                                                                            .world.getScoreboard()
+                                                                            .addPlayerToTeam(
+                                                                                armorStand.getCachedUniqueIdString(),
+                                                                                "oldFairySouls"
                                                                             );
 
-                                                                            Minecraft
-                                                                                .getMinecraft()
-                                                                                .world.getScoreboard()
-                                                                                .addPlayerToTeam(
-                                                                                    armorStand.getCachedUniqueIdString(),
-                                                                                    "oldFairySouls"
-                                                                                );
-
-                                                                            if (foundFairySouls.add(armorStand.getUniqueID())) {
-                                                                                System.out.println(
-                                                                                    foundFairySouls
-                                                                                );
-                                                                                System.out.println(
-                                                                                    foundFairySouls.size() +
-                                                                                    " found fairy souls"
-                                                                                );
-                                                                            }
+                                                                        if (
+                                                                            foundFairySouls.add(
+                                                                                armorStand.getUniqueID()
+                                                                            )
+                                                                        ) {
+                                                                            System.out.println(
+                                                                                foundFairySouls
+                                                                            );
+                                                                            System.out.println(
+                                                                                foundFairySouls.size() +
+                                                                                " found fairy souls"
+                                                                            );
                                                                         }
                                                                     }
-                                                                }
-                                                            } catch (Exception e) {
+                                                                } else {}
+                                                            } catch (
+                                                                Exception e
+                                                            ) {
                                                                 e.printStackTrace();
                                                             }
                                                         }
